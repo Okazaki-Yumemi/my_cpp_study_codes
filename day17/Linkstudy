@@ -1,0 +1,34 @@
+插入的核心口诀是：“先牵后手，再断前缘”。一定要先让新节点抓住后面的链子，再让前面的节点松手，否则后面的数据就永远断线丢失了（内存泄漏）！
+1. 头插法 (Push Front / Insert at Head)
+    业务逻辑：永远在第一名之前插队。新来的直接当老大。
+    效率：极其逆天，永远是 O(1)，不需要遍历。
+    动作：new_node->next = head; head = new_node;
+2. 尾插法 (Push Back / Insert at Tail)
+    业务逻辑：老老实实去队伍最后面排队。
+    效率：如果只有一个 head 指针，你得从头遍历到尾（走到 curr->next == nullptr 的地方），是 $O(N)$。(架构师小贴士：工业界通常会多存一个 Node* tail 指针永远指着末尾，这样尾插法也能变成 $O(1)$！)
+    动作：找到最后一个节点 last，然后 last->next = new_node;
+3. 中间插队 (Insert at Position)
+    业务逻辑：在指定的两个节点（比如 A 和 B）中间硬塞一个新节点 N。
+    动作：找到节点 A。然后执行口诀：“先牵后手” N->next = A->next;（也就是指着 B），“再断前缘” A->next = N;。
+
+💣 二、 拆迁大队 (Deletion)
+删除的核心口诀是：“搭桥铺路，过河拆桥”。你得先让前面的节点越过倒霉蛋，直接连上倒霉蛋后面的节点，然后再把倒霉蛋物理超度（delete）。
+1. 删头 (Pop Front / Delete Head)
+    业务逻辑：开除现任老大，让 2 号位上位。
+    动作：先锁定倒霉蛋 Node* target = head;，然后头衔转移 head = head->next;，最后物理消灭 delete target;。
+2. 删中间/删尾巴 (Delete by Value or Index)
+    业务逻辑：干掉队伍里的某个人。
+    核心难点：在单链表里，你如果正站在倒霉蛋的位置上，你是无法操作他前面那个人的（因为指针只能单向往后指）。所以，你必须派一个侦察兵找到倒霉蛋的前一个人 (prev)！
+    动作：找到前驱节点 prev。搭桥：prev->next = target->next;。拆桥：delete target;。
+    
+    三、 巡逻与修改 (Traversal & Update)
+这个你已经很熟了，就是经典的 while 循环。
+
+遍历顺藤摸瓜
+
+模式：
+Node* curr = head;
+while (curr != nullptr) {
+    // 对 curr->data 做点什么（打印、修改、比较）
+    curr = curr->next; // 走向下一个
+}
